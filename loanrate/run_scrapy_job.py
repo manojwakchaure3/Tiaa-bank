@@ -2,19 +2,22 @@ import subprocess
 import os
 import sys
 import logging
+from datetime import datetime
 from pathlib import Path
 
 # --- Logger Configuration ---
 def setup_logger():
-    # Correctly separate log directory and file path
-    log_dir = Path("C:/Users/Wakch/OneDrive/Desktop/stoic salamander/Tiaa bank/loanrate/loanrate/spiders/data/log")
-    log_dir.mkdir(parents=True, exist_ok=True)
+    # Define log directory
+    log_dir = os.path.join("C://Users//Wakch//OneDrive//Desktop//stoic salamander//Tiaa bank//loanrate//loanrate//spiders//data//log//run_scrapy.log")
+    os.makedirs(log_dir, exist_ok=True)  # Ensure directory exists
 
-    log_file_path = log_dir / "run_scrapy.log"
+    # Define full path to the single log file
+    log_file_path = os.path.join(log_dir, "run_scrapy.log")
 
     logger = logging.getLogger("pipeline_logger")
     logger.setLevel(logging.INFO)
 
+    # Prevent duplicate handlers
     if not logger.handlers:
         file_handler = logging.FileHandler(log_file_path, encoding='utf-8', mode='a')
         console_handler = logging.StreamHandler(sys.stdout)
@@ -31,8 +34,8 @@ def setup_logger():
 # Initialize logger
 logger = setup_logger()
 
-# --- Set working directory to project root (where scrapy.cfg is located) ---
-project_dir = Path("C:/Users/Wakch/OneDrive/Desktop/stoic salamander/Tiaa bank/loanrate")
+# --- Set working directory to project root ---
+project_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(project_dir)
 
 logger.info("Running Scrapy spider...")
@@ -62,13 +65,14 @@ except Exception as e:
     logger.error(f"Scrapy execution error: {e}")
     sys.exit(1)
 
-# --- Append JSON to CSV ---
-script_path = Path("C:/Users/Wakch/OneDrive/Desktop/stoic salamander/Tiaa bank/loanrate/loanrate/spiders/append_json_to_csv.py")
+# --- Optional: Append JSON to CSV ---
+script_path =  os.path.join("C://Users//Wakch//OneDrive//Desktop//stoic salamander//Tiaa bank//loanrate//loanrate//spiders//append_json_to_csv.py")
 
 logger.info("Appending JSON to CSV...")
 
 try:
     subprocess.run([sys.executable, str(script_path)], check=True)
+    
     logger.info("Append complete.")
 except subprocess.CalledProcessError as e:
     logger.error(f"Append failed: {e}")
