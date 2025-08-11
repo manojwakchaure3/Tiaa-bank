@@ -23,7 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install scrapy
     - name: Run scraping script
-      run: run: python run_scrapy_job.py
+      run: python run_scrapy_job.py
 
     - name: Debug - list files after scrape
       run: |
